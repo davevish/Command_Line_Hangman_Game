@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "inquirer": "^3.3.0"
+    "inquirer": "^3.3.0",
+    "mysql": "^2.15.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -19,5 +20,6 @@
   "bugs": {
     "url": "https://github.com/davevish/node_hangman/issues"
   },
-  "homepage": "https://github.com/davevish/node_hangman#readme"
+  "homepage": "https://github.com/davevish/node_hangman#readme",
+  "keywords": []
 }
