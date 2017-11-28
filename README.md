@@ -1,1 +1,5 @@
-# Command_Line_Hangman_Game
+# Hangman
+
+Technologies Used:
+   - JavaScript
+   - Node Packages (Inquirer)
