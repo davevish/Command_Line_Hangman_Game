@@ -1,16 +1,4 @@
-var inquirer = require("./inquirer");
+exports.game = {
 
-var wordsToGuess = ["sky", "pail", "pickle", "cloth", "slip", "pin", "basin", "wrist", "sense", "town", "book", "hill", "food", "event,", "nation", "soda", "apparatus", "waste", "bone", "friends"];
-
-function pickWord(){
-	var randomNumber = Math.floor(Math.random()*wordsToGuess.length);
-	randomNumber -= 1;
-	var currentWord = wordsToGuess[randomNumber];
-
-	module.exports.currentWord = currentWord;
-
-}
-
-module.exports = {
-	pickWord
+	wordBank: ['mclaren', 'ferrari', 'astonmartin', 'skoda', 'fisker', 'lamborghini', 'porsche', 'ford', 'tatamotors'];
 };

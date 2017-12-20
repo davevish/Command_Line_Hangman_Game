@@ -1,20 +1,10 @@
-function Letters(letters) {
-	this.letters = letters;
-	if(this.letters == " "){
-		this.show = true;
-	}else{
-		this.show = false;
-	}
-}
-
-Letters.prototype.printInfo = function () {
-	if(this.show){
-		return this.letters + " ";
-	}else{
-		return "__ ";
-	}
+var letter = function(let){
+	this.charac = let;
+	this.appear = false;
+	this.letterRender = function(){
+		return !(this.appear) ? "_" : this.charac;
+	};
 };
 
-module.exports = {
-	Letters
-};
+//export the constructor
+module.exports = letter;

@@ -1,81 +1,61 @@
-var game = require('./game.js');
-var words = require('./words.js');
-var letters = require('./letters.js');
-var inquirer = require('./inquirer');
+var Word = require('./words.js');
+var prompt = require('prompt');
 
-//function to prompt user to guess a letter
-function guess(){
-	console.log(newWord.print());
-	inquirer.prompt([
-		{
-			name: 'letter',
-			type: 'text',
-			message: 'Enter a letter:',
-			//validate that input is a SINGLE alphabetic character
-			validate: function(str){
-				var regEx = new RegExp("^[a-zA-Z\s]{1,1}$");
-				if(regEx.test(str)){
-					return true;
-				} else {
-					console.log('\nOops. You must guess a single letter.');
-					return false;
+console.log("Welcome to Hangman!");
+console.log("Guess the car manufacturer!");
+console.log("---------------");
+prompt.start();
+
+
+
+game = {
+	wordBank: ['mclaren', 'ferrari', 'astonmartin', 'skoda', 'fisker', 'lamborghini', 'porsche', 'ford', 'tatamotors'],
+	wordsWon: 0,
+	guessesRemaining: 5,
+	currentWrd: null,
+
+	startGame: function (wrd) {
+		this.resetGuesses();
+		this.currentWrd = new Word(this.wordBank[Math.floor(Math.random()* this.wordBank.length)]);
+		this.currentWrd.getLet();
+		this.promptUser();
+	},
+
+	resetGuesses: function(){
+		this.guessesRemaining = 10;
+	},
+
+	promptUser: function(){
+		var self = this;
+		prompt.get(['guessLet'], function(err, result){
+			console.log("You guessed: " + result.guessLet);
+			var manyGuessed = self.currentWrd.checkLetter(result.guessLet);
+
+			if(manyGuessed ==0) {
+				console.log("Wrong, Try Again");
+				self.guessesRemaining--;
+
+			} else {
+				console.log("Correct! Keep Going!");
+				if(self.currentWrd.findWord()){
+					console.log("You won!");
+					console.log("-------------------");
+					return;
 				}
 			}
-		}
-	]).then(function(user){
-		console.log('-----------------');
-		var letter = user.letter;
-		//check the letter
-		newWord.checkLetter(letter);
-		//log a response based on what the checkLetter method returns
-		if (newWord.hasLetterBeenGuessed) {
-			console.log('Oops! You already guessed that letter!');
-			guess();
-		} else {
-			if(newWord.isComplete()){
-				console.log('Yes! It was ' + newWord.chosenWord + '!');
-				console.log('You win!');
-				//if game is over ask the user if they want to play again
-				playAgain();
-			} else if (newWord.lives === 0) {
-				console.log('Ah man, you are out of lives! Try again! The anser was ' + newWord.chosenWord);
-				//if game is over ask the user if they want to play again
-				playAgain();
-			} else {
-				//if the game is still going tell the user how many lives are left and prompt them to guess again
-				console.log('You have ' + newWord.lives + ' lives left.');
-				guess();
-			}
-		}
-	});
-}
 
-//function to ask the user if they want to play again after win/loss
-function playAgain(){
-	inquirer.prompt([
-		{
-			type: 'list',
-			message: 'Do you want to play again?',
-			name: 'playAgain',
-			choices: ['yes', 'no']
-		}
-	]).then(function(user){
-		var answer = user.playAgain;
-		if (answer === 'yes') {
-			game.userPrompt(function(){
-				newWord = new word.Word(game.chosenWord);
-				guess();
-			});
-		} else {
-			console.log('Ok, thanks for playing!');
-			return;
-		}
-	});
-}
-//starts the game by prompting a user to input an actor(game.js)
-//creates a new Word using the constructor function from word.js
-//starts the guess function which prompts the user to guess a letter
-game.userPrompt(function(){
-	newWord = new word.Word(game.chosenWord);
-	guess();
-});
+			console.log("Guesses remaining: " + self.guessesRemaining);
+			console.log("-------------------");
+			if((self.guessesRemaining > 0) && (self.currentWrd.found == false)){
+				self.promptUser();
+			}
+			else if(self.guessesRemaining ==0){
+				console.log("You lost!. The correct word was ", self.currentWrd.target);
+			} else {
+				console.log(self.currentWrd.wordRender());
+			}
+		});
+	}
+};
+
+game.startGame();

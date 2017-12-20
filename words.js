@@ -1,45 +1,42 @@
-var Letters = require("./letters.js");
+var letter = require('./letters.js');
 
-var Word = function(currentWord) {
-	this.chances = 5;
-	this.currentWord = currentWord;
-	this.letters = [];
-	this.guesses = [];
+function Word(target) {
+	this.target = target;
+	this.lets = [];
+	this.found = false;
 
-	for (var i = 0; i < this.currentWord.length, i++){
-		this.letters.push(new Letters.Letters(this.currentWord[i]));
-	}
-};
+	this.getLet = function() {
+		for (var i=0; i < this.target.length; i++) {
+			this.lets.push( new letter(this.target[i]));
+		}
+	};
 
-Word.prototype.checkLetters = function (letters) {
-	this.wrong = true;
-	this.alreadyGuessed = false;
-	var letter = letters.toLowerCase();
+	this.findWord = function() {
+		this.found = this.lets.every(function(currLett) {
+			return currLett.appear;
+		});
+		return this.found;
+	};
 
-	if (this.guesses.indexOf(letters ! = -1){
-		this.alreadyGuessed = true;
-	}else{
-		this.alreadyGuessed.push(letters);
-		for(var i = 0; i < this.letters.length; i++){
-			if(this.letters[i].letters.toLowerCase() == letters){
-				this.wrong = false;
-				this.letters[i].show = true;
+	this.checkLetter = function(guessLet) {
+		var toReturn = 0;
+
+		for (var i = 0; i < this.lets.length; i++) {
+			if (this.lets[i].charac == guessLet){
+				this.lets[i].appear = true;
+				toReturn++;
 			}
 		}
-		if (this.wrong){
-			this.chances --;
+		return toReturn;
+	};
+
+	this.wordRender = function() {
+		var string = '';
+		for (var i=0; i < this.lets.length; i++){
+			string += this.lets[i].letterRender();
 		}
-	}
-};
+		return string;
+	};
+}
 
-Word.prototype.print = function () {
-	var output = "";
-	for(var i = 0; i < this.letters.length; i++){
-		output =+ this.letters[i].printInfo();
-	}
-	return output;
-};
-
-module.exports ={
-	Word
-};
+module.exports = Word;
